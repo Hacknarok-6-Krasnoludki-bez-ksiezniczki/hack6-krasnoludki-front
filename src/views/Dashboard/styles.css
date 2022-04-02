@@ -1,0 +1,10 @@
+.dashboard-background-image {
+  background: url('../../assets/img/mock-bg.jpg');
+  background-size: cover;
+}
+
+.dashboard-main-form {
+  height: 93vh;
+  display: flex;
+  justify-content: center;
+}

@@ -1,0 +1,24 @@
+.icon-button.see-more-button {
+  text-align: center;
+  transition: 0.3s;
+  display: block;
+  margin: auto;
+}
+
+.icon-button:hover {
+  transform: scale(1.2);
+}
+
+.icon-button.see-more-button p {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #FFF;
+  text-transform: uppercase;
+  margin-top: 0;
+  margin-bottom: -1.75rem;
+}
+
+button .see-more-icon {
+  font-size: 6rem;
+  color: #FFF;
+}
