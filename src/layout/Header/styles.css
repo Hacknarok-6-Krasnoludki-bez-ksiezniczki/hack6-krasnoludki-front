@@ -27,3 +27,7 @@ header .profile-picture {
 header .header-notifications {
   font-size: 1.75rem;
 }
+
+.header-logo-img {
+  border-right: 1px solid #dbdbdb;
+}

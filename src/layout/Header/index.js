@@ -6,7 +6,8 @@ import {APP_NAME} from "../../utils/info";
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
 import './styles.css';
-import logo from '../../assets/img/logo.svg';
+import logo from '../../assets/img/niebieskie_bez.png';
+import mockCompanyLogo from '../../assets/img/logo.svg';
 
 function Header() {
   const [ companyLogo, setCompanyLogo ] = useState(null);
@@ -14,7 +15,7 @@ function Header() {
 
   useEffect(() => {
     setTimeout(() => {
-      setCompanyLogo(logo);
+      setCompanyLogo(mockCompanyLogo);
     }, 500);
   }, [])
 
@@ -23,7 +24,7 @@ function Header() {
       <header>
         <div className="header-logo">
           <Link to="/dashboard">
-            <img src={logo} alt={APP_NAME} />
+            <img src={logo} alt={APP_NAME} className="header-logo-img" />
           </Link>
           {!!companyLogo && <img src={companyLogo} alt="TODO - Company" />}
         </div>

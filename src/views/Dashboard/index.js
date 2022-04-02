@@ -7,9 +7,7 @@ import './styles.css';
 function Dashboard() {
   return (
     <>
-      <Grid item xs={4} className="dashboard-background-image">
-        <p>Cos tu piszemy?</p>
-      </Grid>
+      <Grid item xs={4} className="dashboard-background-image" />
       <Grid item xs={8} className="dashboard-main-form">
         <DashboardForm />
       </Grid>

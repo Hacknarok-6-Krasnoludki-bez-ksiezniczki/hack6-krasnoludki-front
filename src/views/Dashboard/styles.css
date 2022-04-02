@@ -1,6 +1,7 @@
 .dashboard-background-image {
-  background: url('../../assets/img/mock-bg.jpg');
+  background-image: url('../../assets/img/Vertical.jpg');
   background-size: cover;
+  background-position: center;
 }
 
 .dashboard-main-form {

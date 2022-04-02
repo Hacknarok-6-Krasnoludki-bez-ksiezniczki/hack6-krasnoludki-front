@@ -1,8 +1,12 @@
 import React, {useState} from 'react';
 import {Box, Tab, Tabs} from "@mui/material";
 import TabPanel from "../../../../components/TabPanel";
+import ApartmentIcon from '@mui/icons-material/Apartment';
+import FlagIcon from '@mui/icons-material/Flag';
+import FindReplaceIcon from '@mui/icons-material/FindReplace';
 
 import './styles.css';
+import DashboardTripSearch from "../DashboardTripSearch";
 
 function a11yProps(index) {
   return {
@@ -23,13 +27,13 @@ function DashboardForm() {
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="pick your preferred destination"
               variant="fullWidth">
-          <Tab label="Item One" {...a11yProps(0)} />
-          <Tab label="Item Two" {...a11yProps(1)} />
-          <Tab label="Item Three" {...a11yProps(2)} />
+          <Tab icon={<ApartmentIcon />} iconPosition="start" label="Company offices" {...a11yProps(0)} />
+          <Tab icon={<FlagIcon />} iconPosition="start" label="External destinations" {...a11yProps(1)} />
+          <Tab icon={<FindReplaceIcon />} iconPosition="start" label="Open trips" {...a11yProps(2)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        Item One
+        <DashboardTripSearch />
       </TabPanel>
       <TabPanel value={value} index={1}>
         Item Two

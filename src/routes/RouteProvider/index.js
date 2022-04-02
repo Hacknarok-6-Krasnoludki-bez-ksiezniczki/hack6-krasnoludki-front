@@ -3,8 +3,11 @@ import Home from "../../views/Home";
 import Layout from "../../layout";
 import Dashboard from "../../views/Dashboard";
 import Private from "../Private";
-import {useMemo, useState} from "react";
+import React, {useMemo, useState} from "react";
 import AuthContext from "../../context/AuthContext";
+
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
 
 function Routing() {
   const [authContent, setAuthContent] = useState(null);
@@ -14,17 +17,18 @@ function Routing() {
     [authContent, setAuthContent],
   );
   return (
-
-    <AuthContext.Provider value={authValue}>
-      <Router>
-        <Routes>
-          <Route exact path="/" element={<Home />} />
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <AuthContext.Provider value={authValue}>
+        <Router>
+          <Routes>
+            <Route exact path="/" element={<Home />} />
             <Route path="/dashboard" element={<Layout />}>
               <Route exact path="/dashboard" element={<Private Component={Dashboard} />} />
             </Route>
-        </Routes>
-      </Router>
-    </AuthContext.Provider>
+          </Routes>
+        </Router>
+      </AuthContext.Provider>
+    </LocalizationProvider>
   );
 }
 
