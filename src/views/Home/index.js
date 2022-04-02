@@ -11,7 +11,7 @@ import logo from '../../assets/img/biale_bez.png';
 import './styles.css';
 
 function Home() {
-  const { authContent, setAuthContent } = useContext(AuthContext);
+  const { authContent } = useContext(AuthContext);
   const navigate = useNavigate();
   const learnMoreRef = useRef();
 
@@ -20,8 +20,6 @@ function Home() {
       navigate('/dashboard');
     }
   }, [authContent, navigate]);
-
-  const onLogoutSuccess = () => setAuthContent(null);
 
   return (
     <div id="homepage">
@@ -36,13 +34,7 @@ function Home() {
               We make it possible for employees to work remotely from offices spread around the world and explore the most interesting places on a daily basis.
             </h3>
             <div className="login-button">
-              {!authContent ? <Login /> : (
-                <GoogleLogout
-                  clientId={googleClientId}
-                  buttonText="Logout"
-                  onLogoutSuccess={onLogoutSuccess}
-                />
-              )}
+              {!authContent && <Login />}
             </div>
           </div>
         </div>

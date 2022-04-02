@@ -15,6 +15,15 @@ header .header-logo, header .header-logo img {
   height: 7vh;
 }
 
+header .company-logo {
+  margin-right: 1.5rem;
+}
+
+header .header-logo {
+  display: flex;
+  justify-content: center;
+}
+
 header .header-actions {
   display: flex;
   align-items: center;

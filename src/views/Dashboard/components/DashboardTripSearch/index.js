@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import DatePicker from '@mui/lab/DatePicker';
@@ -7,15 +7,12 @@ import SearchIcon from '@mui/icons-material/Search';
 
 import './styles.css';
 
-function DashboardTripSearch() {
-  const [from, setFrom] = useState(null);
-  const [to, setTo] = useState(null);
-
+function DashboardTripSearch({destinations, date, numberOfPeople}) {
   return (
     <>
       <Autocomplete
         id="grouped-demo"
-        options={mockDestinations}
+        options={destinations}
         groupBy={(option) => option.country}
         getOptionLabel={(option) => option.name}
         renderInput={(params) => <TextField {...params} label="Choose your destination" />}
@@ -23,17 +20,17 @@ function DashboardTripSearch() {
       <div className="dates-wrapper">
         <DatePicker
           label="From"
-          value={from}
+          value={date.from.value}
           onChange={(newValue) => {
-            setFrom(newValue);
+            date.from.setValue(newValue);
           }}
           renderInput={(params) => <TextField {...params} />}
         />
         <DatePicker
           label="To"
-          value={to}
+          value={date.to.value}
           onChange={(newValue) => {
-            setTo(newValue);
+            date.to.setValue(newValue);
           }}
           renderInput={(params) => <TextField {...params} />}
         />
@@ -42,7 +39,8 @@ function DashboardTripSearch() {
         <TextField
           label="Number of people"
           type="number"
-          defaultValue={1}
+          value={numberOfPeople.value}
+          onChange={(e) => numberOfPeople.setValue(e.target.value)}
           InputLabelProps={{
             shrink: true,
           }}
@@ -57,28 +55,5 @@ function DashboardTripSearch() {
 
   );
 }
-
-const mockDestinations = [
-  {
-    name: 'Vienna',
-    country: 'Austria',
-  },
-  {
-    name: 'Salzburg',
-    country: 'Austria',
-  },
-  {
-    name: 'Krakow',
-    country: 'Poland',
-  },
-  {
-    name: 'Warsaw',
-    country: 'Poland',
-  },
-  {
-    name: 'Bucharest',
-    country: 'Romania',
-  },
-]
 
 export default DashboardTripSearch;

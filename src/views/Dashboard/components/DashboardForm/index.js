@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Box, Tab, Tabs} from "@mui/material";
 import TabPanel from "../../../../components/TabPanel";
 import ApartmentIcon from '@mui/icons-material/Apartment';
@@ -7,6 +7,9 @@ import FindReplaceIcon from '@mui/icons-material/FindReplace';
 
 import './styles.css';
 import DashboardTripSearch from "../DashboardTripSearch";
+import CityService from "../../../../api/service/cities";
+import HqsService from "../../../../api/service/hqs";
+import AuthContext from "../../../../context/AuthContext";
 
 function a11yProps(index) {
   return {
@@ -16,7 +19,30 @@ function a11yProps(index) {
 }
 
 function DashboardForm() {
+  const { authContent } = useContext(AuthContext);
   const [value, setValue] = useState(0);
+
+  const [from, setFrom] = useState(null);
+  const [to, setTo] = useState(null);
+
+  const [numberOfPeople, setNumberOfPeople] = useState(1);
+
+  const [externalDestinations, setExternalDestinations] = useState([]);
+  const [hqsDestinations, setHqsDestinations] = useState([]);
+
+  useEffect(() => {
+    CityService.getCities()
+      .then((res) => setExternalDestinations(res))
+      .catch((err) => console.log(err));
+  }, []);
+
+  useEffect(() => {
+    if (authContent?.internalData?.companyId) {
+      HqsService.getHqs(authContent?.internalData?.companyId)
+        .then((res) => setHqsDestinations(res))
+        .catch((err) => console.log(err));
+    }
+  }, [authContent]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -33,10 +59,42 @@ function DashboardForm() {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <DashboardTripSearch />
+        <DashboardTripSearch
+          destinations={hqsDestinations}
+          date={{
+            from: {
+              value: from,
+              setValue: setFrom,
+            },
+            to: {
+              value: to,
+              setValue: setTo,
+            },
+          }}
+          numberOfPeople={{
+            value: numberOfPeople,
+            setValue: setNumberOfPeople,
+          }}
+        />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
+        <DashboardTripSearch
+          destinations={externalDestinations}
+          date={{
+            from: {
+              value: from,
+              setValue: setFrom,
+            },
+            to: {
+              value: to,
+              setValue: setTo,
+            },
+          }}
+          numberOfPeople={{
+            value: numberOfPeople,
+            setValue: setNumberOfPeople,
+          }}
+        />
       </TabPanel>
       <TabPanel value={value} index={2}>
         Item Three

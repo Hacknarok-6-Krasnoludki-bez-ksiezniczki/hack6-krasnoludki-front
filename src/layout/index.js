@@ -1,7 +1,6 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Header from './Header';
-import Footer from './Footer';
 import {Grid} from "@mui/material";
 
 function Layout() {
@@ -17,9 +16,6 @@ function Layout() {
         <Header />
         <Grid item container xs={12}>
           <Outlet />
-        </Grid>
-        <Grid item xs={12} justify="center">
-          <Footer />
         </Grid>
       </Grid>
   );

@@ -6,10 +6,8 @@ import GoogleIcon from '@mui/icons-material/Google';
 import {Button} from "@mui/material";
 
 function Login() {
-  // eslint-disable-next-line no-unused-vars
-  const { authContent, setAuthContent } = useContext(AuthContext);
+  const { setAuthContent } = useContext(AuthContext);
   const onSuccess = ({tokenId, profileObj}) => {
-    console.log(profileObj);
     setAuthContent({
       profile: profileObj,
       token: tokenId,

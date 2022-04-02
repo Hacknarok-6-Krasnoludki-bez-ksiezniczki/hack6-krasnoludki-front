@@ -1,23 +1,43 @@
 import React, {useContext, useEffect, useState} from 'react';
 import AuthContext from "../../context/AuthContext";
-import {Avatar, Badge, Grid} from "@mui/material";
-import {Link} from "react-router-dom";
+import {Avatar, Badge, Button, Grid} from "@mui/material";
+import {Link, useNavigate} from "react-router-dom";
 import {APP_NAME} from "../../utils/info";
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
 import './styles.css';
 import logo from '../../assets/img/niebieskie_bez.png';
-import mockCompanyLogo from '../../assets/img/logo.svg';
+import UserService from "../../api/service/user";
+import IconButton from "@mui/material/IconButton";
 
 function Header() {
-  const [ companyLogo, setCompanyLogo ] = useState(null);
-  const { authContent } = useContext(AuthContext);
+  const { authContent, setAuthContent } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    setTimeout(() => {
-      setCompanyLogo(mockCompanyLogo);
-    }, 500);
-  }, [])
+    if (authContent && !authContent.internalData) {
+      console.log(authContent.profile.email);
+      UserService.getLoginData({email: authContent.profile.email})
+        .then((res) => {
+          const {budget, company, company_img, company_id, id} = res[0];
+          setAuthContent((prevState) => ({
+            ...prevState,
+            internalData: {
+              budget,
+              company,
+              companyImg: company_img,
+              companyId: company_id,
+              id,
+            }
+          }))
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [authContent, setAuthContent]);
+
+  const goToProfile = () => {
+    navigate('/dashboard/profile');
+  }
 
   return !authContent ? null : (
     <Grid item xs={12}>
@@ -26,21 +46,36 @@ function Header() {
           <Link to="/dashboard">
             <img src={logo} alt={APP_NAME} className="header-logo-img" />
           </Link>
-          {!!companyLogo && <img src={companyLogo} alt="TODO - Company" />}
+          {!!authContent?.internalData?.companyImg && (
+            <>
+              <img
+                className="company-logo"
+                src={authContent.internalData.companyImg}
+                alt={authContent?.internalData?.company}
+              />
+              {settings.map((setting) => (
+                <Button key={setting} onClick={() => console.log('TODO')}>{setting}</Button>
+              ))}
+            </>
+          )}
         </div>
         <div className="header-actions">
           <Badge badgeContent={1} color="primary">
             <NotificationsIcon className="header-notifications" />
           </Badge>
-          <Avatar
-            alt={authContent.profile.name}
-            className="profile-picture"
-            src={authContent.profile.imageUrl}
-          />
+          <IconButton onClick={goToProfile} sx={{ p: 0 }}>
+            <Avatar
+              alt={authContent.profile.name}
+              className="profile-picture"
+              src={authContent.profile.imageUrl}
+            />
+          </IconButton>
         </div>
       </header>
     </Grid>
   );
 }
+
+const settings = ['Profile', 'Messages', 'My trips', 'Buddies', 'Calendar', 'Points balance', 'Logout'];
 
 export default Header;
