@@ -185,7 +185,7 @@ function Reservation() {
                   Check in
                 </Typography>
                 <Typography gutterBottom variant="p" component="div" style={{fontWeight: 100}}>
-                  Tutaj data
+                  {new Date(location.state.start_date).toLocaleDateString('en-US', { year: "numeric", month: "long", day: "numeric"})}
                 </Typography>
               </div>
               <div>
@@ -193,7 +193,7 @@ function Reservation() {
                   Check out
                 </Typography>
                 <Typography gutterBottom variant="p" component="div" style={{fontWeight: 100}}>
-                  Tutaj data
+                  {new Date(location.state.end_date).toLocaleDateString('en-US', { year: "numeric", month: "long", day: "numeric"})}
                 </Typography>
               </div>
             </div>
