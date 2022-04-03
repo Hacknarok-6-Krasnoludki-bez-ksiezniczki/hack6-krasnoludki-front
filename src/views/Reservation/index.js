@@ -1,17 +1,26 @@
-import React, {useEffect, useState} from 'react';
-import {Box, Button, Grid} from "@mui/material";
+import React, {useContext, useEffect, useState} from 'react';
+import {Alert, Backdrop, Box, Button, Grid, Typography} from "@mui/material";
 import Steps from "./components/Steps";
-import {useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import AccommodationCard from "./components/AccommodationCard";
 
 import './styles.css';
 import SeeMoreButton from "../../components/SeeMoreButton";
 import FlightService from "../../api/service/flights";
+import AuthContext from "../../context/AuthContext";
+import FlightCard from "./components/FlightCard";
+import BuddyService from "../../api/service/buddies";
+import Buddies from "./components/Buddies";
 
-const steps = ['Accommodation', 'Travel options', 'Extras', 'Summary'];
+const steps = ['Accommodation', 'Travel options', 'Buddy', 'Summary'];
 
 function Reservation() {
+  const { authContent } = useContext(AuthContext);
   const [chosenHotel, setChosenHotel] = useState(null);
+  const [backdropOpen, setBackdropOpen] = useState(false);
+  const [chosenFlight, setChosenFlight] = useState('');
+  const navigate = useNavigate();
+  const [buddies, setBuddies] = useState([]);
   const [nextButtonDisabled, setNextButtonDisabled] = useState(true);
   const [transition, setTransition] = useState(false);
   const [flightFrom, setFlightFrom] = useState(null);
@@ -27,6 +36,9 @@ function Reservation() {
         case 0:
           getFlights();
           break;
+        case 1:
+          getBuddies();
+          break;
         default:
           console.log('Reached default! This shouldn\'t have happened!');
       }
@@ -41,20 +53,45 @@ function Reservation() {
   }, [chosenHotel, nextButtonDisabled, setNextButtonDisabled]);
 
   useEffect(() => {
-    if (!!flightPrice && !!flightTo && !!flightFrom && nextButtonDisabled) {
+    if (!!flightPrice && !!flightTo && !!flightFrom && transition && activeStep === 0) {
       setTransition(false);
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
     }
-  }, [flightPrice, flightTo, flightFrom, nextButtonDisabled, setNextButtonDisabled, setActiveStep, setTransition]);
+  }, [flightPrice, flightTo, flightFrom, transition, setActiveStep, activeStep, setTransition, buddies]);
+
+  useEffect(() => {
+    if (buddies.length && transition) {
+      console.log(buddies);
+      setTransition(false);
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    }
+  }, [buddies, transition, setTransition, setActiveStep]);
 
   const handleNext = () => {
-    setNextButtonDisabled(true);
-    setTransition(true);
+    if (activeStep === 2) {
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    } else if (activeStep === steps.length - 1) {
+      setBackdropOpen(true);
+    } else {
+      setNextButtonDisabled(true);
+      setTransition(true);
+    }
   };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
+
+  const getBuddies = () => {
+    BuddyService.getBuddies({
+      location: location.state.location,
+    })
+      .then((res) => {
+        console.log(res);
+        setBuddies(res);
+      })
+      .catch((err) => console.log(err));
+  }
 
   const getFlights = () => {
     FlightService.getFlights({
@@ -62,6 +99,7 @@ function Reservation() {
       adults: location.state.adults,
       start_date: location.state.start_date,
       end_date: location.state.end_date,
+      user_id: authContent.internalData.id,
     })
       .then((res) => {
         const responseFrom = res["0"];
@@ -118,17 +156,124 @@ function Reservation() {
     case 1:
       middleContent = (
         <>
-          <pre>
-            {flightFrom}
-          </pre>
-          <pre>
-            {flightTo}
-          </pre>
-          <pre>
-            {flightPrice}
-          </pre>
+          <Grid item xs={12} container className="flight-cards">
+            <Grid item xs={12}>
+              <FlightCard from={flightFrom} to={flightTo} price={flightPrice} chosenFlight={chosenFlight} setChosenFlight={setChosenFlight} />
+            </Grid>
+          </Grid>
+          <Grid item xs={12} className="see-more-wrapper">
+            <SeeMoreButton className="black" label="See more"/>
+          </Grid>
         </>
       );
+      break;
+    case 2:
+      middleContent = (
+        <Buddies buddies={buddies} />
+      )
+      break;
+    case 3:
+      middleContent = (
+        <Grid item xs={12} container spacing={2} style={{marginTop: '2.5rem'}}>
+          <Grid item xs={4} className="summary-column">
+            <Typography gutterBottom variant="h6" component="div" style={{fontWeight: 700, marginBottom: '2rem'}}>
+              Reservation details
+            </Typography>
+            <div className='summary-minor-column-wrapper'>
+              <div>
+                <Typography gutterBottom variant="h7" component="div" style={{fontWeight: 700}}>
+                  Check in
+                </Typography>
+                <Typography gutterBottom variant="p" component="div" style={{fontWeight: 100}}>
+                  Tutaj data
+                </Typography>
+              </div>
+              <div>
+                <Typography gutterBottom variant="h7" component="div" style={{fontWeight: 700}}>
+                  Check out
+                </Typography>
+                <Typography gutterBottom variant="p" component="div" style={{fontWeight: 100}}>
+                  Tutaj data
+                </Typography>
+              </div>
+            </div>
+            <Typography gutterBottom variant="h6" component="div" style={{fontWeight: 700, marginTop: '4rem'}}>
+              Chosen apartament
+            </Typography>
+            <Typography gutterBottom variant="p" component="div" style={{fontWeight: 100}}>
+              {chosenHotel.name}
+            </Typography>
+          </Grid>
+          <Grid item xs={4} className="summary-column">
+            <Typography gutterBottom variant="h6" component="div" style={{fontWeight: 700, marginBottom: '2rem'}}>
+              Billing details
+            </Typography>
+            <div className="billing-details">
+              <Typography gutterBottom variant="p" component="div" style={{fontWeight: 700}}>
+                Accommodation
+              </Typography>
+              <Typography gutterBottom variant="p" component="div" style={{fontWeight: 100}}>
+                {Math.floor(chosenHotel.price)} €
+              </Typography>
+            </div>
+            <div className="billing-details">
+              <Typography gutterBottom variant="p" component="div" style={{fontWeight: 700}}>
+                Transport
+              </Typography>
+              <Typography gutterBottom variant="p" component="div" style={{fontWeight: 100}}>
+                {Math.floor(flightPrice)} €
+              </Typography>
+            </div>
+            <div className="billing-details">
+              <Typography gutterBottom variant="p" component="div" style={{fontWeight: 700}}>
+                Company reimbursements
+              </Typography>
+              <Typography gutterBottom variant="p" component="div" style={{fontWeight: 100}}>
+                -{Math.floor(flightPrice)+Math.floor(chosenHotel.price)} €
+              </Typography>
+            </div>
+            <div className="billing-details" style={{marginTop: '2rem'}}>
+              <Typography gutterBottom variant="p" component="div" style={{fontWeight: 700}}>
+                Total
+              </Typography>
+              <Typography gutterBottom variant="p" component="div" style={{fontWeight: 700}}>
+                0 €
+              </Typography>
+            </div>
+            <div className="billing-details points">
+              <Typography gutterBottom variant="p" component="div" style={{fontWeight: 700}}>
+                Remaining ReWork Points
+              </Typography>
+              <Typography gutterBottom variant="p" component="div" style={{fontWeight: 700}}>
+                768
+              </Typography>
+            </div>
+          </Grid>
+          <Grid item xs={4} className="summary-column">
+            <Typography gutterBottom variant="h6" component="div" style={{fontWeight: 700, marginBottom: '2rem'}}>
+              Extra information
+            </Typography>
+            <div className="billing-details additional">
+              <Typography gutterBottom variant="p" component="div" style={{fontWeight: 700}}>
+                Insurance
+              </Typography>
+              <Button onClick={() => console.log('todo')}>Show details</Button>
+            </div>
+            <div className="billing-details additional">
+              <Typography gutterBottom variant="p" component="div" style={{fontWeight: 700}}>
+                Legal details
+              </Typography>
+              <Button onClick={() => console.log('todo')}>Show details</Button>
+            </div>
+            <div className="billing-details additional">
+              <Typography gutterBottom variant="p" component="div" style={{fontWeight: 700}}>
+                Required documents
+              </Typography>
+              <Button onClick={() => console.log('todo')}>Show details</Button>
+            </div>
+          </Grid>
+        </Grid>
+      )
       break;
     default:
       middleContent = null;
@@ -150,11 +295,22 @@ function Reservation() {
             Back
           </Button>
           <Box sx={{ flex: '1 1 auto' }} />
-          <Button onClick={handleNext} variant="contained" disabled={nextButtonDisabled}>
+          <Button onClick={handleNext} variant="contained" disabled={transition}>
             {activeStep === steps.length - 1 ? 'Finalize' : 'Next'}
           </Button>
         </Box>
       </Grid>
+      <Backdrop
+        sx={{ color: '#000', zIndex: 999 }}
+        open={backdropOpen}
+        onClick={() => console.log('todo')}
+        className="success-backdrop"
+      >
+        <Alert severity="success"><div>
+          Your trip has been booked successfully! <strong>Safe travels!</strong>
+          <Button style={{display: 'block', textAlign: 'center', margin: '2rem auto 0 auto'}} onClick={() => navigate('/dashboard')}>Go back to your dashboard</Button>
+        </div></Alert>
+      </Backdrop>
     </>
   );
 }

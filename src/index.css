@@ -6,6 +6,40 @@
   padding:0;
 }
 
+.steps-header {
+  font-weight: 700;
+}
+
+.summary-column {
+  padding: 0.5rem 3rem 3rem 3rem !important;
+}
+
+.summary-minor-column-wrapper {
+  display: flex;
+  justify-content: flex-start;
+}
+.summary-minor-column-wrapper > div {
+  width: 50%;
+}
+
+.summary-column:nth-child(2) {
+  border-left: 1px solid #e1e1e1;
+  border-right: 1px solid #e1e1e1;
+}
+
+.billing-details {
+  display: flex;
+  justify-content: space-between;
+}
+
+.billing-details.points * {
+  color: #7FC8F8;
+}
+
+.billing-details.additional {
+  margin-bottom: 2rem;
+}
+
 body {
   margin: 0;
   background: #ffffff;
@@ -15,7 +49,9 @@ body {
 .dimmed {
   color: #7c7c7c;
 }
-
+.success-backdrop {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+}
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

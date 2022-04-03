@@ -1,11 +1,57 @@
 .flight-card-details {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-between;
+}
+
+.flight-one-way {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.flight-one-way:first-child {
+  border-bottom: 1px solid #e1e1e1;
+}
+.flight-one-way > div:first-child {
+  padding: 2rem 12rem 2rem 4rem;
+}
+
+.flight-specifics {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+}
+
+.flight-price {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border-left: 1px solid #e1e1e1;
+  padding: 2rem 4rem;
+}
+
+.flight-icon {
+  padding: 2rem 4rem;
+}
+
+.flight-single-detail {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.flight-single-detail div:first-child, .flight-single-detail div:nth-child(2) {
+  margin-bottom: 0;
 }
 
 .price {
   font-weight: 100;
+}
+
+.icon-back {
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
 }
 
 .chosen {

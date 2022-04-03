@@ -1,0 +1,30 @@
+.extra-buddies {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.steps-header {
+  font-weight: 700;
+}
+.main-buddy {
+  padding: 1.5rem 3rem;
+}
+
+.extra-buddy-detail {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 0.5rem 2rem;
+}
+.extra-buddy-card-content {
+  display: flex;
+}
+.main-buddy-inner {
+  display: flex;
+  margin-top: 3rem;
+}
+.main-buddy-text {
+  margin-left: 3rem;
+}
