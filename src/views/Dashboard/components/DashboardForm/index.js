@@ -29,6 +29,10 @@ function DashboardForm() {
 
   const [externalDestinations, setExternalDestinations] = useState([]);
   const [hqsDestinations, setHqsDestinations] = useState([]);
+  const [chosenExternalDestinationValue, setChosenExternalDestinationValue] = useState({name: '', country: ''});
+  const [chosenExternalDestinationInputValue, setChosenExternalDestinationInputValue] = useState('');
+  const [chosenHqsDestinationValue, setChosenHqsDestinationValue] = useState({name: '', country: ''});
+  const [chosenHqsDestinationInputValue, setChosenHqsDestinationInputValue] = useState('');
 
   useEffect(() => {
     CityService.getCities()
@@ -75,6 +79,12 @@ function DashboardForm() {
             value: numberOfPeople,
             setValue: setNumberOfPeople,
           }}
+          chosenDestination={{
+            value: chosenHqsDestinationValue,
+            inputValue: chosenHqsDestinationInputValue,
+            setValue: setChosenHqsDestinationValue,
+            setInputValue: setChosenHqsDestinationInputValue,
+          }}
         />
       </TabPanel>
       <TabPanel value={value} index={1}>
@@ -93,6 +103,12 @@ function DashboardForm() {
           numberOfPeople={{
             value: numberOfPeople,
             setValue: setNumberOfPeople,
+          }}
+          chosenDestination={{
+            value: chosenExternalDestinationValue,
+            inputValue: chosenExternalDestinationInputValue,
+            setValue: setChosenExternalDestinationValue,
+            setInputValue: setChosenExternalDestinationInputValue,
           }}
         />
       </TabPanel>

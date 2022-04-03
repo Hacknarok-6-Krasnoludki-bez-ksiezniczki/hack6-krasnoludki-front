@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import DatePicker from '@mui/lab/DatePicker';
@@ -6,12 +6,48 @@ import {Button} from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 
 import './styles.css';
+import {useNavigate} from "react-router-dom";
+import HotelService from "../../../../api/service/hotels";
 
-function DashboardTripSearch({destinations, date, numberOfPeople}) {
+function DashboardTripSearch({destinations, date, numberOfPeople, chosenDestination}) {
+  const navigate = useNavigate();
+
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+  useEffect(() => {
+    if (buttonDisabled) {
+      HotelService.getHotels({
+        location: chosenDestination.value.name,
+        adults: numberOfPeople.value,
+        start_date: date.from.value.toISOString().slice(0, 10),
+        end_date: date.to.value.toISOString().slice(0, 10),
+      })
+        .then((res) => {
+          navigate('/reservation', {
+            state: {
+              accommodation: res["0"],
+              location: chosenDestination.value.name,
+              adults: numberOfPeople.value,
+              start_date: date.from.value.toISOString().slice(0, 10),
+              end_date: date.to.value.toISOString().slice(0, 10),
+            }
+          })
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [buttonDisabled, chosenDestination, navigate, date, numberOfPeople.value])
+
   return (
     <>
       <Autocomplete
-        id="grouped-demo"
+        value={chosenDestination.value}
+        onChange={(event, newValue) => {
+          console.log(newValue);
+          chosenDestination.setValue(newValue);
+        }}
+        inputValue={chosenDestination.inputValue}
+        onInputChange={(event, newInputValue) => {
+          chosenDestination.setInputValue(newInputValue);
+        }}
         options={destinations}
         groupBy={(option) => option.country}
         getOptionLabel={(option) => option.name}
@@ -48,7 +84,8 @@ function DashboardTripSearch({destinations, date, numberOfPeople}) {
         <Button
           variant="contained"
           endIcon={<SearchIcon />}
-          onClick={() => console.log('BEKA')}
+          onClick={() => setButtonDisabled(true)}
+          disabled={buttonDisabled}
         >Submit</Button>
       </div>
     </>

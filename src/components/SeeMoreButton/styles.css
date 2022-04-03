@@ -22,3 +22,7 @@ button .see-more-icon {
   font-size: 6rem;
   color: #FFF;
 }
+
+.icon-button.see-more-button.black, .icon-button.see-more-button.black * {
+  color: #000;
+}

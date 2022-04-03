@@ -1,0 +1,19 @@
+.flight-card-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.price {
+  font-weight: 100;
+}
+
+.chosen {
+  outline: 3px solid #7FC8F8;
+}
+
+.flight-card-name {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}

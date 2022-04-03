@@ -1,0 +1,18 @@
+.accommodation-card-details {
+  display: flex;
+  justify-content: space-between;
+}
+
+.price {
+  font-weight: 100;
+}
+
+.chosen {
+  outline: 3px solid #7FC8F8;
+}
+
+.accommodation-card-name {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}

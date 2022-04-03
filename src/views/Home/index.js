@@ -1,7 +1,5 @@
 import React, {useContext, useEffect, useRef} from 'react';
-import {GoogleLogout} from "react-google-login";
 import { useNavigate } from "react-router-dom";
-import {googleClientId} from "../../utils/auth";
 import AuthContext from "../../context/AuthContext";
 import Login from "./components/Login";
 import SeeMoreButton from "../../components/SeeMoreButton";

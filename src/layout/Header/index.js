@@ -1,14 +1,16 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect} from 'react';
 import AuthContext from "../../context/AuthContext";
 import {Avatar, Badge, Button, Grid} from "@mui/material";
 import {Link, useNavigate} from "react-router-dom";
 import {APP_NAME} from "../../utils/info";
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import {GoogleLogout} from "react-google-login";
 
 import './styles.css';
 import logo from '../../assets/img/niebieskie_bez.png';
 import UserService from "../../api/service/user";
 import IconButton from "@mui/material/IconButton";
+import {googleClientId} from "../../utils/auth";
 
 function Header() {
   const { authContent, setAuthContent } = useContext(AuthContext);
@@ -39,6 +41,10 @@ function Header() {
     navigate('/dashboard/profile');
   }
 
+  const logout = () => {
+    setAuthContent(null);
+  }
+
   return !authContent ? null : (
     <Grid item xs={12}>
       <header>
@@ -56,6 +62,19 @@ function Header() {
               {settings.map((setting) => (
                 <Button key={setting} onClick={() => console.log('TODO')}>{setting}</Button>
               ))}
+              <GoogleLogout
+                clientId={googleClientId}
+                onLogoutSuccess={logout}
+                render={({onClick, disabled}) => (
+                  <Button
+                    onClick={onClick}
+                    disabled={disabled}
+                  >
+                    Logout
+                  </Button>
+                )}
+              >
+              </GoogleLogout>
             </>
           )}
         </div>
@@ -76,6 +95,6 @@ function Header() {
   );
 }
 
-const settings = ['Profile', 'Messages', 'My trips', 'Buddies', 'Calendar', 'Points balance', 'Logout'];
+const settings = ['Profile', 'Messages', 'My trips', 'Buddies', 'Calendar', 'Points balance'];
 
 export default Header;
